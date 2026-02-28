@@ -1,98 +1,70 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export default function App() {
-  
-  const [activeTab, setActiveTab] = useState("Inicio")
+const Tab = createBottomTabNavigator();
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "Inicio":
-        return <Text style={styles.contentText}>Pantalla de Inicio</Text>;
-      case "Perfil":
-        return <Text style={styles.contentText}>Pantalla de Perfil</Text>;
-      case "Buscar":
-        return <Text style={styles.contentText}>Pantalla de Buscar</Text>;
-      default:
-        return null;
-    }
-  }
+function ScreenComponent({ route }) {
+
+  const { name } = route.params || { name: 'Inicio' };
 
   return (
     <View style={styles.container}>
-
-      <View style={styles.content}>
-        {renderContent()}
-      </View>
-
-      <View style={styles.tabBar}>
-        <TouchableOpacity
-          style={[styles.button, activeTab === "Inicio" && styles.activeButton]}
-          onPress={() => setActiveTab("Inicio")}
-        >
-          <Text style={styles.textBar}>Inicio</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, activeTab === "Perfil" && styles.activeButton]}
-          onPress={() => setActiveTab("Perfil")}
-        >
-          <Text style={styles.textBar}>Perfil</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.button, activeTab === "Buscar" && styles.activeButton]}
-          onPress={() => setActiveTab("Buscar")}
-        >
-          <Text style={styles.textBar}>Buscar</Text>
-        </TouchableOpacity>
-      </View>
-
+      <Text style={styles.title}>{name}</Text>
     </View>
   );
 }
 
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { height: 60 },
+          tabBarLabelStyle: { fontSize: 14, marginBottom: 5 }
+         
+        }}
+      >
+        <Tab.Screen 
+          name="Inicio" 
+          component={ScreenComponent} 
+          initialParams={{ name: 'Pantalla de Inicio' }} 
+          options={{ title: 'Inicio' }}
+        />
+        <Tab.Screen 
+          name="Buscar" 
+          component={ScreenComponent} 
+          initialParams={{ name: 'Pantalla de Buscar' }} 
+          options={{ title: 'Buscar' }}
+        />
+        <Tab.Screen 
+          name="Profile" 
+          component={ScreenComponent} 
+          initialParams={{ name: 'Pantalla de Perfil' }} 
+          options={{ title: 'Perfil' }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-
-  content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#c9bd6e"
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#efce94',
   },
-
-  contentText: {
-    fontSize: 22,
-    fontStyle: "italic",
-    fontWeight: "bold"
+  text: {
+    fontSize: 18,
+    color: '#666',
   },
-
-  textBar: {
-    fontWeight: "bold",
-    color: "#e8e5dc"
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    fontStyle: "italic"
   },
-
-  tabBar: {
-    flexDirection: "row",
-    height: 60,
-    borderTopWidth: 1,
-    borderColor: "#c9bd6e",
-    backgroundColor: "#6b390a"
-    
-  },
-
-  button: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-    
-  },
-
-  activeButton: {
-    backgroundColor: "#ef7b0e6e"
-  }
 });
